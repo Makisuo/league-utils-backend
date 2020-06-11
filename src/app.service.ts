@@ -1,5 +1,4 @@
 import { Injectable, HttpService, NotFoundException } from '@nestjs/common'
-
 @Injectable()
 export class AppService {
 	constructor (private httpService: HttpService) {}
