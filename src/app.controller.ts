@@ -11,8 +11,15 @@ export class AppController {
 	}
 
 	@Get('summoner/:name')
-	async getSummoner (@Req() req, @Res() res, @Param('name') name: string): Promise<any> {
+	async getSummonerByName (@Req() req, @Res() res, @Param('name') name: string): Promise<any> {
 		const response = await this.appService.getSummonerByName(name)
+		console.log(response)
 		return res.status(HttpStatus.OK).json(response)
 	}
+
+	// @Get('summoner/byid/:id')
+	// async getSummoner (@Req() req, @Res() res, @Param('name') name: string): Promise<any> {
+	// 	const response = await this.appService.getSummonerById(name)
+	// 	return res.status(HttpStatus.OK).json(response)
+	// }
 }

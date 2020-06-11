@@ -1,28 +1,24 @@
-import { Injectable } from '@nestjs/common'
-import * as lolapi from 'kayn'
-import { KaynConfig } from 'kayn'
-const { Kayn, REGIONS } = lolapi
+import { Injectable, HttpService } from '@nestjs/common'
 
 @Injectable()
 export class AppService {
-	kayn: any
-	constructor () {
-		const kaynConfig: KaynConfig = {
-			region: REGIONS.EUROPE_WEST,
-			requestOptions: {
-				shouldRetry: true,
-				numberOfRetriesBeforeAbort: 3,
-				delayBeforeRetry: 3000,
-			},
-		}
-		this.kayn = Kayn(process.env.RIOT_LOL_API_KEY)(kaynConfig)
-	}
+	constructor (private httpService: HttpService) {}
 
 	getServer (): string {
 		return 'LeagueUtils Backend Server'
 	}
 
-	async getSummonerByName (name: string): Promise<JSON> {
-		return await this.kayn.Summoner.by.name(name).region(REGIONS.EUROPE_WEST)
+	async getSummonerByName (name: string) {
+		const response = await this.httpService
+			.get(
+				`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${name}?api_key=${process.env
+					.RIOT_LOL_API_KEY}`,
+			)
+			.toPromise()
+		return response.data
 	}
+
+	// async getSummonerById (id: string): Promise<JSON> {
+	// 	return await this.kayn.Summoner.by.id(id).region(REGIONS.EUROPE_WEST)
+	// }
 }
