@@ -1,12 +1,18 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Req, Res, Param, HttpStatus, Body, UnauthorizedException } from '@nestjs/common'
+import { AppService } from './app.service'
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+	constructor (private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
+	@Get()
+	getServer (): string {
+		return this.appService.getServer()
+	}
+
+	@Get('summoner/:name')
+	async getSummoner (@Req() req, @Res() res, @Param('name') name: string): Promise<any> {
+		const response = await this.appService.getSummonerByName(name)
+		return res.status(HttpStatus.OK).json(response)
+	}
 }
