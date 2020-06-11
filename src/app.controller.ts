@@ -10,16 +10,28 @@ export class AppController {
 		return this.appService.getServer()
 	}
 
-	@Get('summoner/:name')
-	async getSummonerByName (@Req() req, @Res() res, @Param('name') name: string): Promise<any> {
+	@Get('summoner/by-name/:name')
+	async getSummonerByName (@Req() req, @Res() res, @Param('name') name: string): Promise<JSON> {
 		const response = await this.appService.getSummonerByName(name)
 		console.log(response)
 		return res.status(HttpStatus.OK).json(response)
 	}
 
-	// @Get('summoner/byid/:id')
-	// async getSummoner (@Req() req, @Res() res, @Param('name') name: string): Promise<any> {
-	// 	const response = await this.appService.getSummonerById(name)
-	// 	return res.status(HttpStatus.OK).json(response)
-	// }
+	@Get('mastery/by-name/:name')
+	async getMasteryDataBySummonerName (@Res() res, @Param('name') name: string): Promise<JSON> {
+		const response = await this.appService.getMasteryDataBySummonerName(name)
+		return res.status(HttpStatus.OK).json(response)
+	}
+
+	@Get('mastery/lowest/by-name/:name')
+	async getLowestMasteryDataBySummonerName (@Res() res, @Param('name') name: string): Promise<JSON> {
+		const response = await this.appService.getLowestChampionMastery(name)
+		return res.status(HttpStatus.OK).json(response)
+	}
+
+	@Get('mastery/next/by-name/:name')
+	async getNextMasteryDataBySummonerName (@Res() res, @Param('name') name: string): Promise<JSON> {
+		const response = await this.appService.getNextChampionLevelUp(name)
+		return res.status(HttpStatus.OK).json(response)
+	}
 }
