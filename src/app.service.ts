@@ -1,4 +1,4 @@
-import { Injectable, HttpService } from '@nestjs/common'
+import { Injectable, HttpService, NotFoundException } from '@nestjs/common'
 
 @Injectable()
 export class AppService {
@@ -9,13 +9,17 @@ export class AppService {
 	}
 
 	async getSummonerByName (name: string): Promise<any> {
-		const response = await this.httpService
-			.get(
-				`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${name}?api_key=${process.env
-					.RIOT_LOL_API_KEY}`,
-			)
-			.toPromise()
-		return response.data
+		try {
+			const response = await this.httpService
+				.get(
+					`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${name}?api_key=${process.env
+						.RIOT_LOL_API_KEY}`,
+				)
+				.toPromise()
+			return response.data
+		} catch (error) {
+			throw new NotFoundException()
+		}
 	}
 
 	async getMasteryDataBySummonerName (name: string): Promise<any> {
