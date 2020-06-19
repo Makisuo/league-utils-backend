@@ -14,6 +14,7 @@ export class AppService {
 	}
 
 	async getSummonerByName (name: string): Promise<any> {
+		console.log('hi')
 		try {
 			const response = await this.httpService
 				.get(
@@ -50,15 +51,8 @@ export class AppService {
 	}
 
 	async getMasteryDataOfChampionBySummonerName (name: string, champion: string): Promise<any> {
-		const { id } = await this.getSummonerByName(name)
 		const championId = await this.getChampionIdByName(champion)
-		const response = await this.httpService
-			.get(
-				`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${id}/by-champion/${championId}?api_key=${process
-					.env.RIOT_LOL_API_KEY}`,
-			)
-			.toPromise()
-		return response.data
+		return await this.getMasteryDataOfChampionBySummonerNameAndChampionId(name, championId)
 	}
 
 	async getLowestChampionMastery (name: string): Promise<JSON> {

@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, Param, HttpStatus } from '@nestjs/common'
+import { Controller, Get, Res, Param, HttpStatus } from '@nestjs/common'
 import { AppService } from './app.service'
 
 @Controller()
@@ -11,7 +11,7 @@ export class AppController {
 	}
 
 	@Get('summoner/by-name/:name')
-	async getSummonerByName (@Req() req, @Res() res, @Param('name') name: string): Promise<JSON> {
+	async getSummonerByName (@Res() res, @Param('name') name: string): Promise<JSON> {
 		const response = await this.appService.getSummonerByName(name)
 		console.log(response)
 		return res.status(HttpStatus.OK).json(response)
