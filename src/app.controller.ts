@@ -13,7 +13,6 @@ export class AppController {
 	@Get('summoner/by-name/:name')
 	async getSummonerByName (@Res() res, @Param('name') name: string): Promise<JSON> {
 		const response = await this.appService.getSummonerByName(name)
-		console.log(response)
 		return res.status(HttpStatus.OK).json(response)
 	}
 

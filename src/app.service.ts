@@ -9,12 +9,11 @@ export class AppService {
 
 	async getCurrentVersion () {
 		const respond = await this.httpService.get(`https://ddragon.leagueoflegends.com/api/versions.json`).toPromise()
-		const result = await respond
+		const result = await respond.data
 		return result[0]
 	}
 
 	async getSummonerByName (name: string): Promise<any> {
-		console.log('hi')
 		try {
 			const response = await this.httpService
 				.get(
@@ -83,7 +82,7 @@ export class AppService {
 	async getChampionIdByName (name: string): Promise<number> {
 		const version = await this.getCurrentVersion()
 		const response = await this.httpService
-			.get(` https://cdn.communitydragon.org/${version}/champion/${name}/data`)
+			.get(`https://cdn.communitydragon.org/${version}/champion/${name}/data`)
 			.toPromise()
 		const result = response.data
 		return result.id
