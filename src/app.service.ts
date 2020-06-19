@@ -7,6 +7,12 @@ export class AppService {
 		return 'LeagueUtils Backend Server'
 	}
 
+	async getCurrentVersion () {
+		const respond = await this.httpService.get(`https://ddragon.leagueoflegends.com/api/versions.json`).toPromise()
+		const result = await respond
+		return result[0]
+	}
+
 	async getSummonerByName (name: string): Promise<any> {
 		try {
 			const response = await this.httpService
@@ -32,11 +38,23 @@ export class AppService {
 		return response.data
 	}
 
-	async getMasteryDataOfChampionBySummonerName (name: string, champion: number): Promise<any> {
+	async getMasteryDataOfChampionBySummonerNameAndChampionId (name: string, championId: number): Promise<any> {
 		const { id } = await this.getSummonerByName(name)
 		const response = await this.httpService
 			.get(
-				`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${id}/by-champion/${champion}?api_key=${process
+				`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${id}/by-champion/${championId}?api_key=${process
+					.env.RIOT_LOL_API_KEY}`,
+			)
+			.toPromise()
+		return response.data
+	}
+
+	async getMasteryDataOfChampionBySummonerName (name: string, champion: string): Promise<any> {
+		const { id } = await this.getSummonerByName(name)
+		const championId = await this.getChampionIdByName(champion)
+		const response = await this.httpService
+			.get(
+				`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${id}/by-champion/${championId}?api_key=${process
 					.env.RIOT_LOL_API_KEY}`,
 			)
 			.toPromise()
@@ -66,5 +84,14 @@ export class AppService {
 			return championPointsUntilNextLevel < currentElement.championPointsUntilNextLevel ? element : currentElement
 		})
 		return lowestChamp
+	}
+
+	async getChampionIdByName (name: string): Promise<number> {
+		const version = await this.getCurrentVersion()
+		const response = await this.httpService
+			.get(` https://cdn.communitydragon.org/${version}/champion/${name}/data`)
+			.toPromise()
+		const result = response.data
+		return result.id
 	}
 }
