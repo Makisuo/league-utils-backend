@@ -4,7 +4,7 @@ import puppeteer = require('puppeteer')
 @Injectable()
 export class ScrapingService {
 	async scrapeChampionStats (name: string): Promise<any> {
-		const browser = await puppeteer.launch({ headless: false })
+		const browser = await puppeteer.launch({ headless: true })
 
 		const page = await browser.newPage()
 		await page.goto(`https://u.gg/lol/champions/${name}/build`)
@@ -21,11 +21,11 @@ export class ScrapingService {
 		return {
 			champion: name,
 			role: role,
-			winrate: parseInt(data[0]),
+			winrate: data[0],
 			rankInRole: data[1],
 			pickrate: data[2],
-			banrate: parseInt(data[3]),
-			matchcount: parseInt(data[4]),
+			banrate: data[3],
+			matchcount: data[4],
 		}
 	}
 
