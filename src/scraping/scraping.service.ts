@@ -32,14 +32,19 @@ export class ScrapingService {
 	async scrapeSummonerStats (name: string, region: string): Promise<any> {
 		const browser = await puppeteer.launch({
 			headless: false,
-			args: [ `--window-size=900,1200` ],
 		})
 
-		const page = await browser.newPage()
-		await page.goto(`https://u.gg/lol/profile/${region}/${name}/overview`)
+		try {
+			const page = await browser.newPage()
+			await page.setViewport({ width: 900, height: 1200 })
+			await page.goto(`https://u.gg/lol/profile/${region}/${name}/overview`)
 
-		const updateButton = await page.$('.update-button')
-		updateButton.click()
+			await page.waitFor(60000)
+		} catch (error) {
+			console.log(error)
+
+			await browser.close()
+		}
 
 		await browser.close()
 
