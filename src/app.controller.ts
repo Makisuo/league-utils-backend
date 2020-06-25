@@ -1,6 +1,5 @@
 import { Controller, Get, Res, Param, HttpStatus } from '@nestjs/common'
 import { AppService } from './app.service'
-import puppeteer = require('puppeteer')
 
 @Controller()
 export class AppController {
@@ -43,32 +42,5 @@ export class AppController {
 	async getNextMasteryDataBySummonerName (@Res() res, @Param('name') name: string): Promise<JSON> {
 		const response = await this.appService.getNextChampionLevelUp(name)
 		return res.status(HttpStatus.OK).json(response)
-	}
-
-	@Get('scrape')
-	async scrape (@Res() res): Promise<any> {
-		const browser = await puppeteer.launch({ headless: false })
-
-		const page = await browser.newPage()
-		await page.goto('https://u.gg/lol/champions/aatrox/build')
-
-		const elements = await page.$$('.value')
-		const data: string[] = []
-		for (let index = 0; index < elements.length; index++) {
-			data[index] = await (await elements[index].getProperty('innerHTML')).jsonValue()
-		}
-
-		const role = await (await (await page.$('.role-value > div')).getProperty('innerHTML')).jsonValue()
-		await browser.close()
-
-		return res.status(HttpStatus.OK).json({
-			champion: 'aatrox',
-			role: role,
-			winrate: data[0],
-			rank: data[1],
-			pickrate: data[2],
-			banrate: data[3],
-			matchcount: data[4],
-		})
 	}
 }
