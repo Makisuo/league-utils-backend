@@ -39,10 +39,8 @@ export class ScrapingService {
 			await page.setViewport({ width: 900, height: 1200 })
 			await page.goto(`https://u.gg/lol/profile/${region}/${name}/overview`)
 
-			await page.waitFor(60000)
+			await page.waitFor(4000)
 		} catch (error) {
-			console.log(error)
-
 			await browser.close()
 		}
 
