@@ -4,7 +4,7 @@ import puppeteer = require('puppeteer')
 @Injectable()
 export class ScrapingService {
 	async scrapeChampionStats (name: string): Promise<any> {
-		const browser = await puppeteer.launch({ headless: true })
+		const browser = await puppeteer.launch({ headless: true, args: [ '--no-sandbox', '--disable-setuid-sandbox' ] })
 
 		const page = await browser.newPage()
 		await page.goto(`https://u.gg/lol/champions/${name}/build`)
@@ -32,6 +32,7 @@ export class ScrapingService {
 	async scrapeSummonerStats (name: string, region: string): Promise<any> {
 		const browser = await puppeteer.launch({
 			headless: false,
+			args: [ '--no-sandbox', '--disable-setuid-sandbox' ],
 		})
 
 		try {
