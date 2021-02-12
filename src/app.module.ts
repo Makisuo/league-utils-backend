@@ -8,8 +8,8 @@ import { ScrapingModule } from './scraping/scraping.module';
   imports: [
     ConfigModule.forRoot(),
     CacheModule.register({
-      ttl: 600,
-      max: 150,
+      ttl: 60,
+      max: 100,
     }),
     HttpModule,
     ScrapingModule,
